@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Fabric FLOWᴬᴵ | Luxury Fabric Design Portfolio</title>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['"Plus Jakarta Sans"', 'Tajawal', 'system-ui', 'sans-serif'],
+                        'display': ['"Cormorant Garamond"', 'serif'],
+                    },
+                    colors: {
+                        'deep-navy': '#0a0e1a',
+                        'charcoal': '#1a1d2e',
+                        'gold': '#c9a96e',
+                        'gold-light': '#e0c78a',
+                        'cream': '#f0e6d3',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+                        'fade-in': 'fadeIn 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: '0.6' },
+                            '50%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #0a0e1a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.06);
+            --text-primary: #e8e4f0;
+            --text-secondary: #a8a4b8;
+            --accent: #c9a96e;
+            --accent-glow: rgba(201, 169, 110, 0.3);
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-deep);
+            background-image:
+                radial-gradient(ellipse at 30% 20%, rgba(201, 169, 110, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(100, 120, 180, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 80%, rgba(201, 169, 110, 0.04) 0%, transparent 50%);
+            min-height: 100vh;
+            min-height: 100dvh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 var(--glass-highlight);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(201, 169, 110, 0.1),
+                inset 0 1px 0 var(--glass-highlight);
+            transform: translateY(-2px);
+        }
+        .glass-card-sm {
+            background: rgba(255, 255, 255, 0.025);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .glass-card-sm:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Fabric Showcase Container */
+        .fabric-showcase {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: default;
+            transition: background-color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            aspect-ratio: 4/3;
+            max-height: 420px;
+        }
+        .fabric-showcase .pattern-overlay {
+            position: absolute;
+            inset: 0;
+            mix-blend-mode: overlay;
+            opacity: 0.85;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+        .fabric-showcase .pattern-overlay svg {
+            width: 100%;
+            height: 100%;
+        }
+        .fabric-showcase .sheen {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.08) 0%,
+                    transparent 30%,
+                    transparent 60%,
+                    rgba(255, 255, 255, 0.04) 100%);
+            pointer-events: none;
+        }
+
+        /* Carousel for previous works */
+        .prev-works-carousel {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            aspect-ratio: 4/3;
+            max-height: 420px;
+            background: #0a0e1a;
+        }
+        .prev-works-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease;
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .carousel-arrow:hover {
+            background: rgba(201,169,110,0.3);
+            border-color: #c9a96e;
+        }
+        .carousel-arrow.prev { right: 10px; }
+        .carousel-arrow.next { left: 10px; }
+
+        /* Color Preset Buttons */
+        .color-preset {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .color-preset:hover {
+            transform: scale(1.15);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        .color-preset.active {
+            border-color: #c9a96e;
+            box-shadow: 0 0 18px var(--accent-glow);
+            transform: scale(1.1);
+        }
+        .color-preset.active::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Color Picker */
+        input[type="color"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            background: transparent;
+            padding: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        input[type="color"]::-webkit-color-swatch {
+            border-radius: 50%;
+            border: none;
+        }
+        input[type="color"]:hover {
+            border-color: #c9a96e;
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        /* Buttons */
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e8e4f0;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            flex-shrink: 0;
+            position: relative;
+        }
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+        .btn-icon.whatsapp {
+            background: rgba(37, 211, 102, 0.2);
+            border-color: rgba(37, 211, 102, 0.35);
+        }
+        .btn-icon.whatsapp:hover {
+            background: rgba(37, 211, 102, 0.35);
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.3);
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #c9a96e 0%, #a8853f 100%);
+            color: #0a0e1a;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 8px 30px rgba(201, 169, 110, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            color: #e8e4f0;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            white-space: nowrap;
+        }
+        .btn-outline:hover {
+            border-color: #c9a96e;
+            background: rgba(201, 169, 110, 0.08);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: rgba(22, 24, 38, 0.95);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 85vh;
+            max-height: 85dvh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(22, 24, 38, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 169, 110, 0.4);
+            border-radius: 50px;
+            padding: 14px 24px;
+            color: #e8e4f0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+            animation: toastIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                toastOut 0.4s 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            pointer-events: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        @keyframes toastIn {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes toastOut {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-20px); opacity: 0; }
+        }
+
+        /* Cart badge */
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #c9a96e;
+            color: #0a0e1a;
+            font-size: 0.65rem;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0);
+        }
+        .cart-badge.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Footer */
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #e8e4f0;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+        .footer-link:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: #c9a96e;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+        /* Input styles */
+        input[type="text"], input[type="tel"], textarea, select {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #e8e4f0;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        input[type="text"]:focus, input[type="tel"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #c9a96e;
+            box-shadow: 0 0 0 3px rgba(201,169,110,0.1);
+            background: rgba(255,255,255,0.06);
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        label { display: block; font-size: 0.8rem; font-weight: 500; color: #a8a4b8; margin-bottom: 6px; }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a8a4b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            padding-left: 36px;
+        }
+        input[type="radio"] { accent-color: #c9a96e; width: 18px; height: 18px; cursor: pointer; }
+        .radio-label {
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+            padding: 8px 14px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease; font-size: 0.85rem;
+        }
+        .radio-label:has(input:checked) {
+            border-color: #c9a96e; background: rgba(201,169,110,0.1);
+        }
+        .file-upload-area {
+            border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px;
+            padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;
+        }
+        .file-upload-area:hover { border-color: #c9a96e; background: rgba(201,169,110,0.04); }
+        .file-upload-area.has-file { border-color: #4ade80; background: rgba(74,222,128,0.05); }
+
+        /* Color Picker Custom Card */
+        .color-card {
+            position: relative; display: flex; flex-direction: column; background: rgba(0,0,0,0.2); 
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); gap: 12px; overflow: hidden; 
+            padding: 12px; direction: rtl; width: 100%;
+        }
+        .color-area {
+            position: relative; width: 100%; aspect-ratio: 5/1; border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.1); background-blend-mode: multiply; cursor: crosshair; 
+            background: linear-gradient(to right, white, hsl(260,100%,50%)), linear-gradient(to top, black, transparent);
+            transform: scaleX(-1);
+        }
+        .active-indicator {
+            position: absolute; width: 12px; height: 12px; border: 2px solid white; 
+            border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; box-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+        .hue-slider {
+            -webkit-appearance: none; width: 100%; height: 8px; border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 8px; background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red); 
+            cursor: pointer; transform: scaleX(-1); direction: rtl; margin-top: 4px;
+        }
+        .hue-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 16px; height: 16px; background: white; 
+            border-radius: 50%; border: 1px solid #000; cursor: pointer;
+        }
+        .side-select {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; 
+            color: white; padding: 4px 8px; width: auto; cursor: pointer; outline: none; font-size: 0.8rem;
+        }
+        .flex-row-picker {
+            display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse;
+        }
+        .square.letter {
+            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-weight: bold; font-size: 0.8rem;
+        }
+
+        @media (max-width: 640px) {
+            .fabric-showcase, .prev-works-carousel { aspect-ratio: 1/1; max-height: 340px; border-radius: 16px; }
+            .glass-card { border-radius: 16px; }
+            .btn-primary { padding: 10px 18px; font-size: 0.8rem; }
+            .modal-content { padding: 16px; border-radius: 16px; max-height: 90vh; }
+            .color-preset { width: 30px; height: 30px; }
+            input[type="color"] { width: 34px; height: 34px; }
+            .btn-icon { width: 38px; height: 38px; }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- ========== STICKY HEADER ========== -->
+    <header class="sticky top-0 z-50 px-4 py-3">
+        <div class="glass-card-sm max-w-2xl mx-auto px-5 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center flex-shrink-0">
+                    <span class="text-deep-navy font-bold text-xs">W</span>
+                </div>
+                <span class="font-display text-xl font-semibold tracking-wide text-cream">
+                    Fabric FLOWᴬᴵ  
+                </span>
+            </div>
+            <div class="hidden sm:flex items-center gap-3 text-xs text-text-secondary">
+                <span class="opacity-60">Luxury Fabrics</span>
+                <span class="w-1 h-1 rounded-full bg-gold opacity-40"></span>
+                <span class="opacity-60">Bespoke Design</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="max-w-2xl mx-auto px-4 pb-32 space-y-8 flex-1">
+
+        <!-- ===== SECTION 0: PREVIOUS WORKS CAROUSEL ===== -->
+        <section class="space-y-4 animate-fade-in" style="animation-delay: 0.05s; display: none;">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-display text-2xl sm:text-3xl font-semibold text-cream">أعمالنا السابقة</h2>
+                    <p class="text-text-secondary text-sm mt-1">تصفح مجموعة من تصاميم الأقمشة الفاخرة</p>
+                </div>
+            </div>
+            <div class="prev-works-carousel w-full" id="prevWorksCarousel">
+                <img id="carouselImage" src="img/1.png" alt="تصميم سابق" loading="lazy">
+                <button class="carousel-arrow prev" id="prevBtn" aria-label="السابق">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="carousel-arrow next" id="nextBtn" aria-label="التالي">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 1: Interactive Fabric Showcase ===== -->
+        <section class="space-y-4 animate-fade-in" style="animation-delay: 0.1s;">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-display text-2xl sm:text-3xl font-semibold text-cream">معرض الأقمشة التفاعلي</h2>
+                    <p class="text-text-secondary text-sm mt-1">اختر اللون وشاهد النقش ينبض بالحياة</p>
+                </div>
+                <span class="glass-card-sm px-3 py-1.5 text-xs text-gold font-medium rounded-full">Interactive</span>
+            </div>
+            <div class="flex flex-row w-full gap-2 sm:gap-4 items-stretch">
+                <!-- Right Column (60%) -->
+                <div class="w-[60%] glass-card-sm p-3 sm:p-4 flex flex-col gap-4 justify-start" id="mainColorPresets">
+                    <!-- Navigation & Color Title -->
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-text-secondary text-xs sm:text-sm font-medium">اختر اللون:</h3>
+                        <div class="flex items-center gap-2">
+                            <button class="btn-icon w-8 h-8 opacity-80 hover:opacity-100" id="fabPrevBtn" aria-label="السابق" title="التصميم السابق">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                            <button class="btn-icon w-8 h-8 opacity-80 hover:opacity-100" id="fabNextBtn" aria-label="التالي" title="التصميم التالي">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Color Presets + Custom Picker -->
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <button class="color-preset active w-8 h-8 sm:w-9 sm:h-9" data-color="#ffffff" style="background-color:#ffffff;" title="White"></button>
+                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#1a3a4a" style="background-color:#1a3a4a;" title="Deep Teal"></button>
+                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#2d1a3a" style="background-color:#2d1a3a;" title="Royal Plum"></button>
+                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#3a1a1a" style="background-color:#3a1a1a;" title="Burgundy"></button>
+                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#1a2d1a" style="background-color:#1a2d1a;" title="Forest"></button>
+                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#2d2d1a" style="background-color:#2d2d1a;" title="Olive Gold"></button>
+                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#0f1923" style="background-color:#0f1923;" title="Midnight"></button>
+                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#3d2b1a" style="background-color:#3d2b1a;" title="Bronze"></button>
+                        
+                    </div>
+                    
+                    <!-- Advanced Custom Color Picker -->
+                    <div class="color-card rtl mt-2" id="card-rtl" data-default-hue="0" data-default-sat="0" data-default-bright="100">
+                      <div class="color-area"><div class="active-indicator"></div></div>
+                      <input type="range" class="hue-slider" min="0" max="360" />
+                      <div class="flex-row-picker mt-1">
+                        <select class="side-select" id="format-select-rtl">
+                          <option value="hex" selected>HEX</option>
+                          <option value="rgb">RGB</option>
+                          <option value="hsl">HSL</option>
+                        </select>
+                        <code class="value text-gold font-mono text-sm" id="advColorValue">#FFFFFF</code>
+                      </div>
+                      <div class="flex items-center justify-between mt-1">
+                        <div class="flex flex-col">
+                          <span class="text-[10px] text-text-secondary">نسبة التباين</span>
+                          <span class="font-mono text-xs text-white" id="advColorRatio">--</span>
+                        </div>
+                        <div class="square letter" id="advColorSquare">ل</div>
+                      </div>
+                    </div>
+                    
+                    <div class="border-t border-white/10 my-1 w-full"></div>
+                    
+                    <!-- Actions (Cart & WhatsApp) -->
+                    <div class="flex items-center justify-end gap-3 mt-auto pt-2">
+                        <button class="btn-icon relative w-10 h-10" id="cartBtn" title="سلة التسوق">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                            <span class="cart-badge" id="cartBadge">0</span>
+                        </button>
+                        <a href="https://wa.me/967777967272?text=I'm%20interested%20in%20this%20design" target="_blank" rel="noopener noreferrer" class="btn-icon whatsapp w-10 h-10">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Left Column (40%) -->
+                <div class="w-[40%] flex justify-center items-center shrink-0">
+                    <div class="relative flex items-center justify-center">
+                        <div class="fabric-showcase glass-card" id="fabricShowcase" style="width: 200px; height: 550px; max-height: none; aspect-ratio: auto; background-color: #ffffff;">
+                            <div class="pattern-overlay" id="patternOverlay" style="mix-blend-mode: normal; opacity: 1;">
+                                <img id="fabricImage" src="img/1.png" alt="Fabric Design" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="sheen"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 2: Order Tracking Widget ===== -->
+        <section class="space-y-4 animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="glass-card p-5 sm:p-6 space-y-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-semibold text-cream">تتبع طلبك بخصوصية تامة</h3>
+                        <p class="text-text-secondary text-sm mt-1">أدخل رمز التتبع لعرض تصميمك. كما يمكنك اختيار لون وإضافته إلى سلتك.</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="trackingCode" placeholder="أدخل رمز التتبع السري..." class="flex-1 text-sm">
+                    <button class="btn-primary flex-shrink-0" id="launchTrackingBtn">عرض</button>
+                </div>
+
+                <p class="text-xs text-text-secondary opacity-60">مثال: FLW-2024-XK9M • الرمز موجود في تأكيد طلبك</p>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 3: Custom Design Request ===== -->
+        <section class="space-y-4 animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="glass-card p-5 sm:p-6 space-y-4" style="border-color: rgba(201,169,110,0.2);">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0e1a" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-semibold text-cream">خدمة إعادة التصميم</h3>
+                        <p class="text-text-secondary text-sm mt-1">هل لديك نقش يعجبك؟ دعنا نعيد هندسته لك. أرسل لنا الصورة وسنصنع لك تصميماً مخصصاً.</p>
+                    </div>
+                </div>
+                <button class="btn-primary w-full sm:w-auto justify-center" id="requestDesignBtn">اطلب تصميمك الآن</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="max-w-2xl mx-auto px-4 pb-8 pt-2 w-full">
+        <div class="glass-card-sm p-4 flex flex-wrap items-center justify-center gap-3 text-sm">
+            <span class="text-text-secondary text-xs">تواصل معنا:</span>
+            <a href="https://wa.me/967777967272" target="_blank" rel="noopener" class="footer-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                واتساب
+            </a>
+            <a href="mailto:info@fabricflow.ai" class="footer-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 14 2 4"/></svg>
+                البريد الإلكتروني
+            </a>
+            <a href="tel:+967777967272" class="footer-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                اتصال
+            </a>
+        </div>
+        <p class="text-center text-xs text-text-secondary opacity-50 mt-3">© 2025 Fabric FLOWᴬᴵ. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- ========== TRACKING MODAL ========== -->
+    <div class="modal-overlay" id="trackingModal">
+        <div class="modal-content space-y-5">
+            <div class="flex items-center justify-between">
+                <h3 class="font-display text-xl font-semibold text-cream">طلبك: <span id="trackingCodeDisplay" class="text-gold">---</span></h3>
+                <button class="btn-icon w-8 h-8 text-sm" id="closeTrackingModal">✕</button>
+            </div>
+            <div class="fabric-showcase glass-card" id="trackingFabricShowcase" style="background-color:#1a3a4a; aspect-ratio:4/3; max-height:280px;">
+                <div class="pattern-overlay"><svg>…</svg></div><div class="sheen"></div>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs text-text-secondary">تجربة الألوان:</span>
+                <button class="color-preset tracking-preset active" data-color="#1a3a4a" style="background-color:#1a3a4a; width:28px; height:28px;"></button>
+                <button class="color-preset tracking-preset" data-color="#2d1a3a" style="background-color:#2d1a3a; width:28px; height:28px;"></button>
+                <button class="color-preset tracking-preset" data-color="#3a1a1a" style="background-color:#3a1a1a; width:28px; height:28px;"></button>
+                <input type="color" id="trackingColorPicker" value="#1a3a4a" style="width:28px; height:28px;">
+            </div>
+            <!-- Fixed color picker for tracking section (Moved here) -->
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-white/5">
+                <span class="text-xs text-text-secondary">اختر لونًا:</span>
+                <input type="color" id="trackingStaticColor" value="#c9a96e" style="width:34px; height:34px;">
+                <button class="btn-outline text-xs py-1.5 px-3" id="copyColorBtn">📋 نسخ الكود</button>
+                <button class="btn-outline text-xs py-1.5 px-3" id="addColorToCartBtn">🛒 أضف للسلة</button>
+            </div>
+            <a href="https://wa.me/967777967272" class="btn-outline flex-1 justify-center text-sm">استفسار واتساب</a>
+        </div>
+    </div>
+
+    <!-- ========== REQUEST DESIGN MODAL ========== -->
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal-content space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-display text-xl font-semibold text-cream">طلب تصميم مخصص</h3>
+                <button class="btn-icon w-8 h-8 text-sm" id="closeRequestModal">✕</button>
+            </div>
+            <form id="requestForm" class="space-y-4" novalidate>
+                <div><label>الاسم الكامل *</label><input type="text" id="fullName" required></div>
+                <div><label>رقم الواتساب *</label><input type="tel" id="whatsappNumber" required dir="ltr"></div>
+                <div><label>وصف التصميم *</label><textarea id="description" required></textarea></div>
+                <div><label>صورة مرجعية</label><div class="file-upload-area" id="fileUploadArea"><input type="file" id="fileUpload" accept="image/*" class="hidden"><div id="uploadPlaceholder">📷 اضغط للرفع</div><div id="uploadPreview" class="hidden"><img id="previewImage" src="" class="max-h-32 mx-auto rounded"><p id="fileNameDisplay" class="text-xs text-green-400"></p></div></div></div>
+                <div><label>الأولوية</label><div class="flex gap-2"><label class="radio-label"><input type="radio" name="priority" value="urgent"> عاجل</label><label class="radio-label"><input type="radio" name="priority" value="week"> خلال أسبوع</label><label class="radio-label"><input type="radio" name="priority" value="relaxed" checked> بدون استعجال</label></div></div>
+                <div><label>لوحة الألوان</label><div class="flex gap-2"><input type="color" value="#c9a96e"><input type="color" value="#1a3a4a"><input type="color" value="#3a1a1a"></div></div>
+                <div><label>ملاحظات</label><textarea id="notes" rows="2"></textarea></div>
+                <button type="submit" class="btn-primary w-full justify-center">إرسال الطلب</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== SUCCESS MODAL (with tracking code) ========== -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content text-center space-y-4">
+            <div class="text-4xl">🎉</div>
+            <h3 class="font-display text-xl font-semibold text-cream">تم استلام طلبك بنجاح!</h3>
+            <p class="text-text-secondary text-sm">إليك رمز تتبع طلبك. يرجى نسخه والاحتفاظ به لتتمكن من متابعة حالة تصميمك.</p>
+            <div class="glass-card-sm p-3 flex items-center justify-between gap-2">
+                <span id="generatedTrackingCode" class="text-gold font-mono text-lg font-bold tracking-wider">FLW-XXXX-XXXX</span>
+                <button class="btn-icon" id="copyTrackingCode" title="نسخ الكود">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+            </div>
+            <p class="text-xs text-red-300/80">⚠️ هام: قم بنسخ الكود الآن، فهو الطريقة الوحيدة لتتبع طلبك.</p>
+            <button class="btn-primary w-full" id="closeSuccessModal">حسناً، فهمت</button>
+        </div>
+    </div>
+
+    <!-- ========== TOAST CONTAINER ========== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        (function() {
+            // Carousel for previous works
+            const carouselImage = document.getElementById('carouselImage');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const totalImages = 5; // Assume 1.png to 5.png
+            let currentIndex = 0;
+            function updateCarousel() {
+                carouselImage.src = `img/${currentIndex + 1}.png`;
+                carouselImage.alt = `تصميم ${currentIndex + 1}`;
+            }
+            prevBtn.addEventListener('click', () => { currentIndex = (currentIndex - 1 + totalImages) % totalImages; updateCarousel(); });
+            nextBtn.addEventListener('click', () => { currentIndex = (currentIndex + 1) % totalImages; updateCarousel(); });
+            updateCarousel();
+
+            // Fabric Showcase dynamic image loader
+            const fabricImage = document.getElementById('fabricImage');
+            const fabPrevBtn = document.getElementById('fabPrevBtn');
+            const fabNextBtn = document.getElementById('fabNextBtn');
+            let currentFabricIndex = 1;
+            let maxFabricIndex = 1;
+
+            function initFabricShowcase() {
+                let i = 1;
+                function checkNext() {
+                    const img = new Image();
+                    img.onload = () => {
+                        maxFabricIndex = i;
+                        i++;
+                        checkNext();
+                    };
+                    img.src = `img/${i}.png`;
+                }
+                checkNext();
+            }
+            initFabricShowcase();
+
+            if (fabNextBtn && fabPrevBtn && fabricImage) {
+                fabNextBtn.addEventListener('click', () => {
+                    const nextIndex = currentFabricIndex + 1;
+                    const img = new Image();
+                    img.onload = () => {
+                        currentFabricIndex = nextIndex;
+                        fabricImage.src = img.src;
+                    };
+                    img.onerror = () => {
+                        currentFabricIndex = 1;
+                        fabricImage.src = `img/1.png`;
+                    };
+                    img.src = `img/${nextIndex}.png`;
+                });
+
+                fabPrevBtn.addEventListener('click', () => {
+                    if (currentFabricIndex > 1) {
+                        currentFabricIndex--;
+                        fabricImage.src = `img/${currentFabricIndex}.png`;
+                    } else {
+                        let i = 2;
+                        let lastValid = 1;
+                        function probe() {
+                            const img = new Image();
+                            img.onload = () => {
+                                lastValid = i;
+                                i++;
+                                probe();
+                            };
+                            img.onerror = () => {
+                                currentFabricIndex = lastValid;
+                                fabricImage.src = `img/${currentFabricIndex}.png`;
+                            };
+                            img.src = `img/${i}.png`;
+                        }
+                        probe();
+                    }
+                });
+            }
+
+            // Fabric showcase & color management
+            const fabricShowcase = document.getElementById('fabricShowcase');
+            const customColorPicker = document.getElementById('customColorPicker'); // may be null
+            const cartBtn = document.getElementById('cartBtn');
+            const cartBadge = document.getElementById('cartBadge');
+            const trackingCodeInput = document.getElementById('trackingCode');
+            const launchTrackingBtn = document.getElementById('launchTrackingBtn');
+            const trackingModal = document.getElementById('trackingModal');
+            const closeTrackingModal = document.getElementById('closeTrackingModal');
+            const trackingCodeDisplay = document.getElementById('trackingCodeDisplay');
+            const trackingFabricShowcase = document.getElementById('trackingFabricShowcase');
+            const trackingColorPicker = document.getElementById('trackingColorPicker');
+            const requestDesignBtn = document.getElementById('requestDesignBtn');
+            const requestModal = document.getElementById('requestModal');
+            const closeRequestModal = document.getElementById('closeRequestModal');
+            const requestForm = document.getElementById('requestForm');
+            const successModal = document.getElementById('successModal');
+            const closeSuccessModal = document.getElementById('closeSuccessModal');
+            const generatedTrackingCode = document.getElementById('generatedTrackingCode');
+            const copyTrackingCodeBtn = document.getElementById('copyTrackingCode');
+            const toastContainer = document.getElementById('toastContainer');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileUpload = document.getElementById('fileUpload');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const uploadPreview = document.getElementById('uploadPreview');
+            const previewImage = document.getElementById('previewImage');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            const trackingStaticColor = document.getElementById('trackingStaticColor');
+            const copyColorBtn = document.getElementById('copyColorBtn');
+            const addColorToCartBtn = document.getElementById('addColorToCartBtn');
+
+            let cartCount = 0;
+            let currentShowcaseColor = '#ffffff';
+            let currentTrackingColor = '#1a3a4a';
+
+            function updateShowcaseColor(element, color) {
+                element.style.backgroundColor = color;
+            }
+
+            function updateActivePreset(selector, color) {
+                document.querySelectorAll(selector).forEach(p => p.classList.remove('active'));
+                const match = document.querySelector(`${selector}[data-color="${color}"]`);
+                if (match) match.classList.add('active');
+            }
+
+            // Main color presets
+            document.querySelectorAll('#mainColorPresets .color-preset[data-color]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const color = this.dataset.color;
+                    currentShowcaseColor = color;
+                    updateShowcaseColor(fabricShowcase, color);
+                    updateActivePreset('#mainColorPresets .color-preset[data-color]', color);
+                    customColorPicker.value = color;
+                });
+            });
+            // Advanced Color Picker Logic
+            function hsbToRgb(h, s, b) {
+              h /= 360; s /= 100; b /= 100;
+              const i = Math.floor(h * 6);
+              const f = h * 6 - i;
+              const p = b * (1 - s);
+              const q = b * (1 - f * s);
+              const t = b * (1 - (1 - f) * s);
+              const mod = i % 6;
+              const r = [b, q, p, p, t, b][mod];
+              const g = [t, b, b, q, p, p][mod];
+              const bl = [p, p, t, b, b, q][mod];
+              return [Math.round(r * 255), Math.round(g * 255), Math.round(bl * 255)];
+            }
+            function rgbToHex(r, g, b) {
+              return "#" + [r, g, b].map(v => v.toString(16).padStart(2, "0")).join("").toUpperCase();
+            }
+            function luminance(r, g, b) {
+              let a = [r, g, b].map(v => {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+              });
+              return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+            }
+            function contrast(rgb) {
+              const L = luminance(rgb[0], rgb[1], rgb[2]);
+              return ((L + 0.05) / 0.05).toFixed(2);
+            }
+            function formatFloat(num) {
+              const n = Number(num);
+              return isNaN(n) ? "0.00" : n.toFixed(2);
+            }
+
+            const card = document.getElementById('card-rtl');
+            if (card) {
+                const hueSlider = card.querySelector('.hue-slider');
+                const colorArea = card.querySelector('.color-area');
+                const valueEl = document.getElementById('advColorValue');
+                const ratioEl = document.getElementById('advColorRatio');
+                const letterEl = document.getElementById('advColorSquare');
+                const formatSelect = document.getElementById('format-select-rtl');
+                const indicator = card.querySelector('.active-indicator');
+                
+                let ahue = Number(card.getAttribute('data-default-hue')) || 0;
+                let asat = Number(card.getAttribute('data-default-sat')) || 0;
+                let abright = Number(card.getAttribute('data-default-bright')) || 100;
+                hueSlider.value = (360 - ahue) % 360;
+
+                function updateAdvDisplay() {
+                    const displayHue = (360 - hueSlider.value) % 360;
+                    ahue = displayHue;
+                    const [r, g, b] = hsbToRgb(displayHue, asat, abright);
+                    if (ratioEl) ratioEl.textContent = contrast([r, g, b]);
+                    if (letterEl) letterEl.style.background = `rgb(${r},${g},${b})`;
+                    indicator.style.left = `${asat.toFixed(2)}%`;
+                    indicator.style.top = `${(100 - abright).toFixed(2)}%`;
+                    let out;
+                    switch (formatSelect.value) {
+                      case 'rgb': out = `rgb(${r}, ${g}, ${b})`; break;
+                      case 'hsl': out = `hsl(${formatFloat(displayHue)}, ${formatFloat(asat)}%, ${formatFloat(abright)}%)`; break;
+                      default: out = rgbToHex(r, g, b);
+                    }
+                    valueEl.textContent = out;
+                    colorArea.style.background = `linear-gradient(to right, white, hsl(${displayHue}, 100%, 50%)), linear-gradient(to top, black, transparent)`;
+                    
+                    // Apply to showcase
+                    const hexColor = rgbToHex(r, g, b);
+                    currentShowcaseColor = hexColor;
+                    updateShowcaseColor(fabricShowcase, hexColor);
+                    updateActivePreset('#mainColorPresets .color-preset[data-color]', null);
+                }
+
+                function updateByPointer(e) {
+                    const rect = colorArea.getBoundingClientRect();
+                    const relX = Math.max(0, Math.min((e.clientX - rect.left) / rect.width, 1));
+                    const relY = Math.max(0, Math.min(1 - (e.clientY - rect.top) / rect.height, 1));
+                    asat = (1 - relX) * 100;
+                    abright = relY * 100;
+                    updateAdvDisplay();
+                }
+
+                let isDragging = false;
+                colorArea.addEventListener('mousedown', e => { isDragging = true; updateByPointer(e); });
+                window.addEventListener('mouseup', () => { isDragging = false; });
+                window.addEventListener('mousemove', e => { if (isDragging) updateByPointer(e); });
+                formatSelect.addEventListener('input', updateAdvDisplay);
+                hueSlider.addEventListener('input', () => { ahue = (360 - hueSlider.value) % 360; updateAdvDisplay(); });
+
+                indicator.style.left = `${asat.toFixed(2)}%`;
+                indicator.style.top = `${(100 - abright).toFixed(2)}%`;
+            }
+
+            // Cart
+            function addToCart(item = 'تصميم') {
+                cartCount++;
+                cartBadge.textContent = cartCount;
+                cartBadge.classList.add('show');
+                clearTimeout(cartBtn._hideTimeout);
+                cartBtn._hideTimeout = setTimeout(() => cartBadge.classList.remove('show'), 3000);
+                showToast(`تمت إضافة ${item} إلى السلة (${cartCount})`);
+            }
+            cartBtn.addEventListener('click', () => addToCart('التصميم'));
+
+            // Tracking section fixed color picker
+            copyColorBtn.addEventListener('click', () => {
+                const color = trackingStaticColor.value;
+                navigator.clipboard.writeText(color).then(() => showToast('📋 تم نسخ الكود: ' + color));
+            });
+            addColorToCartBtn.addEventListener('click', () => {
+                const color = trackingStaticColor.value;
+                addToCart(`لون ${color}`);
+            });
+
+            // Tracking modal
+            function openTrackingModal(code) {
+                trackingCodeDisplay.textContent = code || '---';
+                trackingFabricShowcase.style.backgroundColor = currentTrackingColor;
+                trackingColorPicker.value = currentTrackingColor;
+                document.querySelectorAll('.tracking-preset').forEach(p => {
+                    p.classList.remove('active');
+                    if (p.dataset.color === currentTrackingColor) p.classList.add('active');
+                });
+                trackingModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeTrackingModalFn() { trackingModal.classList.remove('active'); document.body.style.overflow = ''; }
+            launchTrackingBtn.addEventListener('click', () => {
+                const code = trackingCodeInput.value.trim();
+                if (!code) { showToast('⚠️ الرجاء إدخال رمز التتبع'); return; }
+                openTrackingModal(code);
+            });
+            closeTrackingModal.addEventListener('click', closeTrackingModalFn);
+            trackingModal.addEventListener('click', e => { if (e.target === trackingModal) closeTrackingModalFn(); });
+            document.querySelectorAll('.tracking-preset').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const color = this.dataset.color;
+                    currentTrackingColor = color;
+                    updateShowcaseColor(trackingFabricShowcase, color);
+                    trackingColorPicker.value = color;
+                    document.querySelectorAll('.tracking-preset').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            trackingColorPicker.addEventListener('input', function() {
+                currentTrackingColor = this.value;
+                updateShowcaseColor(trackingFabricShowcase, this.value);
+                document.querySelectorAll('.tracking-preset').forEach(p => p.classList.remove('active'));
+            });
+
+            // Request modal
+            function openRequestModal() { requestModal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+            function closeRequestModalFn() { requestModal.classList.remove('active'); document.body.style.overflow = ''; requestForm.reset(); uploadPlaceholder.classList.remove('hidden'); uploadPreview.classList.add('hidden'); fileUploadArea.classList.remove('has-file'); }
+            requestDesignBtn.addEventListener('click', openRequestModal);
+            closeRequestModal.addEventListener('click', closeRequestModalFn);
+            requestModal.addEventListener('click', e => { if (e.target === requestModal) closeRequestModalFn(); });
+
+            fileUploadArea.addEventListener('click', () => fileUpload.click());
+            fileUploadArea.addEventListener('dragover', e => { e.preventDefault(); fileUploadArea.style.borderColor = '#c9a96e'; });
+            fileUploadArea.addEventListener('dragleave', () => { fileUploadArea.style.borderColor = ''; });
+            fileUploadArea.addEventListener('drop', e => {
+                e.preventDefault(); fileUploadArea.style.borderColor = '';
+                if (e.dataTransfer.files.length) { fileUpload.files = e.dataTransfer.files; handleFile(e.dataTransfer.files[0]); }
+            });
+            fileUpload.addEventListener('change', () => { if (fileUpload.files.length) handleFile(fileUpload.files[0]); });
+            function handleFile(file) {
+                if (!file.type.startsWith('image/')) { showToast('⚠️ صورة فقط'); return; }
+                const reader = new FileReader();
+                reader.onload = e => { previewImage.src = e.target.result; uploadPlaceholder.classList.add('hidden'); uploadPreview.classList.remove('hidden'); fileUploadArea.classList.add('has-file'); fileNameDisplay.textContent = file.name; };
+                reader.readAsDataURL(file);
+            }
+
+            // Form submission -> show success modal with tracking code
+            requestForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const fullName = document.getElementById('fullName').value.trim();
+                const whatsapp = document.getElementById('whatsappNumber').value.trim();
+                const desc = document.getElementById('description').value.trim();
+                if (!fullName || !whatsapp || desc.length < 5) { showToast('⚠️ املأ الحقول المطلوبة'); return; }
+                // Generate tracking code
+                const code = 'FLW-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+                generatedTrackingCode.textContent = code;
+                // Close request modal and open success modal
+                closeRequestModalFn();
+                successModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            // Success modal interactions
+            closeSuccessModal.addEventListener('click', () => { successModal.classList.remove('active'); document.body.style.overflow = ''; });
+            successModal.addEventListener('click', e => { if (e.target === successModal) { successModal.classList.remove('active'); document.body.style.overflow = ''; } });
+            copyTrackingCodeBtn.addEventListener('click', () => {
+                const code = generatedTrackingCode.textContent;
+                navigator.clipboard.writeText(code).then(() => showToast('📋 تم نسخ كود التتبع!'));
+            });
+
+            // Toast
+            function showToast(msg) {
+                const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg;
+                toastContainer.appendChild(toast);
+                setTimeout(() => toast.remove(), 3200);
+            }
+
+            // Keyboard escape
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    if (trackingModal.classList.contains('active')) closeTrackingModalFn();
+                    if (requestModal.classList.contains('active')) closeRequestModalFn();
+                    if (successModal.classList.contains('active')) { successModal.classList.remove('active'); document.body.style.overflow = ''; }
+                }
+            });
+
+            // Initial
+            updateShowcaseColor(fabricShowcase, currentShowcaseColor);
+            if (customColorPicker) customColorPicker.value = currentShowcaseColor;
+            trackingColorPicker.value = currentTrackingColor;
+        })();
+    </script>
+</body>
+</html>

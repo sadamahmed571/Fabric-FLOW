@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>منتقي الألوان · تصميم مدمج</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    :root {
+      --border-color: #242424;
+      --radius: 8px;          /* reduced from 12px */
+      --accent-color: #51b5ea;
+      --sans-serif: "Source Sans Pro", "Segoe UI", system-ui, sans-serif;
+    }
+
+    body {
+      background: #000000;
+      color: #f0f0f0;
+      font-family: var(--sans-serif);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    /* البطاقة الرئيسية - حجم أصغر */
+    .color-card {
+      background: #0c0c0c;
+      width: 360px;           /* reduced from 400px */
+      max-width: 92vw;
+      padding: 0.8rem;        /* reduced from 1.2rem */
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;            /* reduced from 1.2rem */
+    }
+
+    /* منطقة السطوع / التشبع */
+    .color-area {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 1;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-blend-mode: multiply;
+      cursor: crosshair;
+      overflow: hidden;
+    }
+
+    .active-indicator {
+      position: absolute;
+      width: 10px;            /* reduced from 14px */
+      height: 10px;
+      border: 1.5px solid white;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      background: rgba(0,0,0,0.2);
+      box-shadow: 0 0 0 1px black;
+      z-index: 10;
+    }
+
+    /* شريط Hue */
+    .hue-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;            /* reduced from 10px */
+      border-radius: 16px;
+      background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
+      cursor: pointer;
+      border: 1px solid #2a2a2a;
+    }
+    .hue-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;            /* reduced from 18px */
+      height: 14px;
+      background: white;
+      border-radius: 50%;
+      border: 1px solid black;
+      cursor: pointer;
+    }
+
+    /* صف الشفافية - حجم أقل */
+    .alpha-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #111;
+      padding: 0.4rem 0.6rem;  /* reduced from 0.6rem 0.8rem */
+      border-radius: 32px;
+      border: 1px solid #2a2a2a;
+    }
+    .alpha-row label {
+      font-size: 0.7rem;       /* reduced */
+      font-weight: 600;
+      color: #ddd;
+    }
+    .alpha-slider {
+      flex: 1;
+      height: 5px;             /* reduced */
+      -webkit-appearance: none;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, #000 100%);
+      border-radius: 3px;
+    }
+    .alpha-slider::-webkit-slider-thumb {
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+    }
+    .alpha-value {
+      width: 48px;             /* reduced */
+      background: #1a1a1a;
+      border: 1px solid #3a3a3a;
+      border-radius: 6px;
+      padding: 0.15rem 0.2rem;
+      color: white;
+      text-align: center;
+      font-family: monospace;
+      font-size: 0.7rem;
+    }
+
+    /* حاوية مدمجة للون الحالي + اللون السابق */
+    .combined-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111;
+      border-radius: 40px;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid #2a2a2a;
+      gap: 0.5rem;
+    }
+    .current-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .preview-swatch {
+      width: 36px;             /* reduced from 56px */
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid #ffffff30;
+      background-image: repeating-conic-gradient(#444 0% 25%, #222 0% 50%);
+      background-size: 8px 8px;
+      overflow: hidden;
+    }
+    .color-fill {
+      width: 100%;
+      height: 100%;
+      background-color: #00aaff;
+    }
+    .current-label {
+      font-size: 0.65rem;
+      color: #aaa;
+    }
+    .prev-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #1a1a1a;
+      padding: 0.2rem 0.5rem;
+      border-radius: 30px;
+    }
+    .prev-swatch {
+      width: 28px;            /* reduced */
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid #aaa;
+      background: #2c2c2c;
+    }
+    .prev-label {
+      font-size: 0.6rem;
+      color: #bbb;
+    }
+    .undo-prev {
+      background: #2a2a2a;
+      border: none;
+      border-radius: 24px;
+      padding: 0.2rem 0.6rem;
+      color: white;
+      font-size: 0.65rem;
+      cursor: pointer;
+    }
+    .undo-prev:hover {
+      background: #3a3a3a;
+    }
+
+    /* أزرار الراديو (تنسيق اللون) - مدمجة */
+    .format-radios {
+      display: flex;
+      gap: 0.5rem;
+      background: #0a0a0a;
+      padding: 0.3rem;
+      border-radius: 32px;
+      border: 1px solid #2a2a2a;
+      justify-content: center;
+    }
+    .format-radios label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: #1a1a1a;
+      padding: 0.2rem 0.6rem;
+      border-radius: 24px;
+      transition: 0.2s;
+    }
+    .format-radios input[type="radio"] {
+      accent-color: var(--accent-color);
+      width: 12px;
+      height: 12px;
+      margin: 0;
+    }
+    .format-radios label:has(input:checked) {
+      background: #2c2c2c;
+      border: 0.5px solid var(--accent-color);
+    }
+
+    /* حقل عرض اللون + زر النسخ */
+    .code-wrapper {
+      display: flex;
+      align-items: center;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 32px;
+      padding: 0.1rem 0.3rem;
+    }
+    .value {
+      font-family: 'SF Mono', monospace;
+      font-size: 0.7rem;
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 0.4rem 0.3rem;
+      flex: 1;
+      outline: none;
+      direction: ltr;
+    }
+    .copy-icon {
+      background: #222;
+      border: none;
+      border-radius: 24px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.6rem;
+      cursor: pointer;
+      color: #ccc;
+    }
+    .copy-icon:hover {
+      background: var(--accent-color);
+      color: black;
+    }
+
+    /* أزرار التأكيد والإلغاء - أصغر */
+    .footer-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      margin-top: 0;
+    }
+    .action-btn {
+      background: #1e1e1e;
+      border: 1px solid #3a3a3a;
+      padding: 0.3rem 1rem;
+      border-radius: 32px;
+      font-weight: 500;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: white;
+    }
+    .action-btn.confirm {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: #000;
+    }
+    .action-btn:hover {
+      background: #333;
+    }
+
+    /* رسالة منبثقة */
+    .toast-msg {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1f1f1f;
+      color: #0f0;
+      padding: 4px 12px;
+      border-radius: 24px;
+      font-size: 0.7rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: 0.2s;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+<div class="color-card" id="main-picker" data-default-hue="200" data-default-sat="97" data-default-bright="94" data-default-alpha="100">
+  <div class="color-area">
+    <div class="active-indicator"></div>
+  </div>
+
+  <input type="range" class="hue-slider" min="0" max="360" step="1" />
+
+  <div class="alpha-row">
+    <label>🔘 الشفافية</label>
+    <input type="range" class="alpha-slider" min="0" max="100" step="1" value="100">
+    <input type="number" class="alpha-value" min="0" max="100" step="1" value="100">
+    <span style="font-size:0.6rem;">%</span>
+  </div>
+
+  <!-- حاوية مدمجة للون الحالي واللون السابق -->
+  <div class="combined-preview">
+    <div class="current-preview">
+      <div class="preview-swatch">
+        <div class="color-fill" id="livePreviewFill"></div>
+      </div>
+      <span class="current-label">اللون الحالي</span>
+    </div>
+    <div class="prev-group">
+      <div class="prev-swatch" id="prevSwatch"></div>
+      <span class="prev-label">السابق</span>
+      <button class="undo-prev" id="undoPrevBtn">↩️</button>
+    </div>
+  </div>
+
+  <div class="format-radios" id="formatRadios">
+    <label><input type="radio" name="colorFormat" value="hex" checked> <span>HEX</span></label>
+    <label><input type="radio" name="colorFormat" value="rgb"> <span>RGBA</span></label>
+    <label><input type="radio" name="colorFormat" value="hsl"> <span>HSLA</span></label>
+  </div>
+
+  <div class="code-wrapper">
+    <code class="value" id="color-value-text">#00A7FA</code>
+    <button class="copy-icon" id="copyColorBtn">📋 نسخ</button>
+  </div>
+
+  <div class="footer-buttons">
+    <button class="action-btn confirm" id="confirmColorBtn">✔ تأكيد</button>
+    <button class="action-btn" id="cancelColorBtn">✖ إلغاء</button>
+  </div>
+</div>
+<div id="toastMsg" class="toast-msg">📋 تم النسخ</div>
+
+<script>
+  (function() {
+    const card = document.getElementById('main-picker');
+    const hueSlider = card.querySelector('.hue-slider');
+    const colorArea = card.querySelector('.color-area');
+    const valueSpan = document.getElementById('color-value-text');
+    const indicator = card.querySelector('.active-indicator');
+    const alphaSlider = card.querySelector('.alpha-slider');
+    const alphaNumber = card.querySelector('.alpha-value');
+    const prevSwatch = document.getElementById('prevSwatch');
+    const undoBtn = document.getElementById('undoPrevBtn');
+    const confirmBtn = document.getElementById('confirmColorBtn');
+    const cancelBtn = document.getElementById('cancelColorBtn');
+    const copyColorBtn = document.getElementById('copyColorBtn');
+    const toast = document.getElementById('toastMsg');
+    const livePreviewFill = document.getElementById('livePreviewFill');
+
+    const radioHex = document.querySelector('input[value="hex"]');
+    const radioRgb = document.querySelector('input[value="rgb"]');
+    const radioHsl = document.querySelector('input[value="hsl"]');
+
+    let hue = Number(card.getAttribute('data-default-hue')) || 200;
+    let sat = Number(card.getAttribute('data-default-sat')) || 97;
+    let bright = Number(card.getAttribute('data-default-bright')) || 94;
+    let alphaPercent = Number(card.getAttribute('data-default-alpha')) || 100;
+
+    let lastConfirmedColor = { hue, sat, bright, alpha: alphaPercent };
+
+    function setAlphaUI(value) {
+      alphaPercent = Math.min(100, Math.max(0, value));
+      alphaSlider.value = alphaPercent;
+      alphaNumber.value = alphaPercent;
+    }
+
+    function hsbToRgb(h, s, b) {
+      let hueNorm = h / 360;
+      let satNorm = s / 100;
+      let brNorm = b / 100;
+      const i = Math.floor(hueNorm * 6);
+      const f = hueNorm * 6 - i;
+      const p = brNorm * (1 - satNorm);
+      const q = brNorm * (1 - f * satNorm);
+      const t = brNorm * (1 - (1 - f) * satNorm);
+      const mod = i % 6;
+      const r = [brNorm, q, p, p, t, brNorm][mod];
+      const g = [t, brNorm, brNorm, q, p, p][mod];
+      const bl = [p, p, t, brNorm, brNorm, q][mod];
+      return [Math.round(r * 255), Math.round(g * 255), Math.round(bl * 255)];
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(v => v.toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+
+    function getCurrentRGBA() {
+      const [r, g, b] = hsbToRgb(hue, sat, bright);
+      const a = (alphaPercent / 100).toFixed(2);
+      return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+    function getCurrentHSLA() {
+      const a = (alphaPercent / 100).toFixed(2);
+      return `hsla(${Math.round(hue)}, ${Math.round(sat)}%, ${Math.round(bright)}%, ${a})`;
+    }
+    function getCurrentHex() {
+      const [r, g, b] = hsbToRgb(hue, sat, bright);
+      return rgbToHex(r, g, b);
+    }
+
+    function updateDisplay() {
+      const [r, g, b] = hsbToRgb(hue, sat, bright);
+      const rgbaColor = `rgba(${r}, ${g}, ${b}, ${alphaPercent/100})`;
+      livePreviewFill.style.backgroundColor = rgbaColor;
+
+      indicator.style.left = sat + '%';
+      indicator.style.top = (100 - bright) + '%';
+
+      const hueGrad = `hsl(${hue}, 100%, 50%)`;
+      colorArea.style.background = `linear-gradient(to right, white, ${hueGrad}), linear-gradient(to top, black, transparent)`;
+
+      const format = document.querySelector('input[name="colorFormat"]:checked').value;
+      let displayText = "";
+      if (format === 'rgb') displayText = getCurrentRGBA();
+      else if (format === 'hsl') displayText = getCurrentHSLA();
+      else displayText = getCurrentHex();
+      valueSpan.textContent = displayText;
+    }
+
+    function updateByPointer(e) {
+      const rect = colorArea.getBoundingClientRect();
+      let clientX, clientY;
+      if (e.touches) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      let relX = (clientX - rect.left) / rect.width;
+      let relY = (clientY - rect.top) / rect.height;
+      relX = Math.min(1, Math.max(0, relX));
+      relY = Math.min(1, Math.max(0, relY));
+      sat = relX * 100;
+      bright = (1 - relY) * 100;
+      updateDisplay();
+    }
+
+    let isDragging = false;
+    colorArea.addEventListener('mousedown', (e) => { e.preventDefault(); updateByPointer(e); isDragging = true; });
+    window.addEventListener('mousemove', (e) => { if(isDragging) { e.preventDefault(); updateByPointer(e); } });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    colorArea.addEventListener('touchstart', (e) => { e.preventDefault(); updateByPointer(e); isDragging = true; }, { passive: false });
+    window.addEventListener('touchmove', (e) => { if(isDragging) updateByPointer(e); });
+    window.addEventListener('touchend', () => { isDragging = false; });
+
+    hueSlider.addEventListener('input', (e) => { hue = parseFloat(e.target.value); updateDisplay(); });
+    alphaSlider.addEventListener('input', (e) => { setAlphaUI(parseInt(e.target.value)); updateDisplay(); });
+    alphaNumber.addEventListener('input', (e) => { setAlphaUI(parseInt(e.target.value)); updateDisplay(); });
+    radioHex.addEventListener('change', () => updateDisplay());
+    radioRgb.addEventListener('change', () => updateDisplay());
+    radioHsl.addEventListener('change', () => updateDisplay());
+
+    function updatePreviousSwatch() {
+      const [r, g, b] = hsbToRgb(lastConfirmedColor.hue, lastConfirmedColor.sat, lastConfirmedColor.bright);
+      const alpha = lastConfirmedColor.alpha / 100;
+      prevSwatch.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function commitCurrentColor() {
+      lastConfirmedColor = { hue, sat, bright, alpha: alphaPercent };
+      updatePreviousSwatch();
+      showToast("✅ تم التأكيد");
+    }
+
+    function revertToLastConfirmed() {
+      hue = lastConfirmedColor.hue;
+      sat = lastConfirmedColor.sat;
+      bright = lastConfirmedColor.bright;
+      alphaPercent = lastConfirmedColor.alpha;
+      hueSlider.value = hue;
+      setAlphaUI(alphaPercent);
+      updateDisplay();
+      showToast("↩️ رجوع للسابق");
+    }
+
+    function copyToClipboard(text, msg) {
+      navigator.clipboard.writeText(text).then(() => showToast(msg)).catch(() => showToast("❌ فشل"));
+    }
+    copyColorBtn.addEventListener('click', () => copyToClipboard(valueSpan.textContent, "📋 نسخت القيمة"));
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.opacity = "1";
+      setTimeout(() => toast.style.opacity = "0", 1500);
+    }
+
+    confirmBtn.addEventListener('click', commitCurrentColor);
+    cancelBtn.addEventListener('click', revertToLastConfirmed);
+    undoBtn.addEventListener('click', revertToLastConfirmed);
+
+    hueSlider.value = hue;
+    setAlphaUI(alphaPercent);
+    lastConfirmedColor = { hue, sat, bright, alpha: alphaPercent };
+    updatePreviousSwatch();
+    updateDisplay();
+  })();
+</script>
+</body>
+</html>
