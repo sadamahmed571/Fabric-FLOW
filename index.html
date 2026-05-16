@@ -130,8 +130,7 @@
             box-shadow:
                 0 20px 60px rgba(0, 0, 0, 0.5),
                 0 0 0 1px rgba(255, 255, 255, 0.05);
-            aspect-ratio: 4/3;
-            max-height: 420px;
+            width: 200px; height: 550px; max-height: none; aspect-ratio: auto;
         }
         .fabric-showcase .pattern-overlay {
             position: absolute;
@@ -494,45 +493,665 @@
         .file-upload-area:hover { border-color: #c9a96e; background: rgba(201,169,110,0.04); }
         .file-upload-area.has-file { border-color: #4ade80; background: rgba(74,222,128,0.05); }
 
-        /* Color Picker Custom Card */
-        .color-card {
-            position: relative; display: flex; flex-direction: column; background: rgba(0,0,0,0.2); 
-            border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); gap: 12px; overflow: hidden; 
-            padding: 12px; direction: rtl; width: 100%;
-        }
-        .color-area {
-            position: relative; width: 100%; aspect-ratio: 5/1; border-radius: 8px; 
-            border: 1px solid rgba(255,255,255,0.1); background-blend-mode: multiply; cursor: crosshair; 
-            background: linear-gradient(to right, white, hsl(260,100%,50%)), linear-gradient(to top, black, transparent);
-            transform: scaleX(-1);
-        }
-        .active-indicator {
-            position: absolute; width: 12px; height: 12px; border: 2px solid white; 
-            border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; box-shadow: 0 0 4px rgba(0,0,0,0.5);
-        }
-        .hue-slider {
-            -webkit-appearance: none; width: 100%; height: 8px; border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 8px; background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red); 
-            cursor: pointer; transform: scaleX(-1); direction: rtl; margin-top: 4px;
-        }
-        .hue-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none; width: 16px; height: 16px; background: white; 
-            border-radius: 50%; border: 1px solid #000; cursor: pointer;
-        }
-        .side-select {
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; 
-            color: white; padding: 4px 8px; width: auto; cursor: pointer; outline: none; font-size: 0.8rem;
-        }
-        .flex-row-picker {
-            display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse;
-        }
-        .square.letter {
-            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; 
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-weight: bold; font-size: 0.8rem;
-        }
+       /* ===== Advanced Color Picker - Responsive for 480px Mobile Screens ===== */
 
+/* Base mobile-first adjustments (applies to all screens, refined below) */
+.adv-picker {
+    background: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    direction: rtl;
+    box-sizing: border-box;
+}
+
+/* Color area: maintain aspect ratio, larger touch target on mobile */
+.adv-picker .color-area {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-blend-mode: multiply;
+    cursor: crosshair;
+    overflow: hidden;
+    min-height: 140px;
+    touch-action: none;
+}
+
+/* Active indicator: slightly larger for mobile visibility */
+.adv-picker .active-indicator {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0 1.5px black, 0 0 6px rgba(255, 255, 255, 0.4);
+    z-index: 10;
+}
+
+/* Hue slider: taller for mobile thumbs */
+.adv-picker .hue-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 14px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 0;
+}
+
+.adv-picker .hue-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid black;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.adv-picker .hue-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid black;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Alpha row: stack-friendly on tight screens */
+.adv-picker .alpha-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.4rem 0.6rem;
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    flex-wrap: wrap;
+}
+
+.adv-picker .alpha-row label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    min-width: 32px;
+}
+
+.adv-picker .alpha-slider {
+    flex: 1;
+    min-width: 80px;
+    height: 8px;
+    -webkit-appearance: none;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #000 100%);
+    border-radius: 3px;
+    margin: 0;
+}
+
+.adv-picker .alpha-slider::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid black;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.adv-picker .alpha-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid black;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.adv-picker .alpha-value {
+    width: 44px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.2rem 0.3rem;
+    color: white;
+    text-align: center;
+    font-family: monospace;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+/* Combined preview: flexible wrapping */
+.adv-picker .combined-preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 40px;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.adv-picker .current-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.adv-picker .preview-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-image: repeating-conic-gradient(#444 0% 25%, #222 0% 50%);
+    background-size: 8px 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.adv-picker .color-fill {
+    width: 100%;
+    height: 100%;
+}
+
+.adv-picker .current-label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.adv-picker .prev-group {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 30px;
+    flex-shrink: 0;
+}
+
+.adv-picker .prev-swatch {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #2c2c2c;
+    flex-shrink: 0;
+}
+
+.adv-picker .prev-label {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.adv-picker .undo-prev {
+    background: rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 24px;
+    padding: 0.3rem 0.7rem;
+    color: white;
+    font-size: 0.65rem;
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 32px;
+    touch-action: manipulation;
+}
+
+.adv-picker .undo-prev:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.adv-picker .undo-prev:active {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* Format radios: scrollable on mobile if needed */
+.adv-picker .format-radios {
+    display: flex;
+    gap: 0.4rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.3rem;
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.adv-picker .format-radios label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.25rem 0.6rem;
+    border-radius: 24px;
+    transition: 0.2s;
+    white-space: nowrap;
+    min-height: 32px;
+    touch-action: manipulation;
+}
+
+.adv-picker .format-radios input[type="radio"] {
+    accent-color: var(--accent);
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.adv-picker .format-radios label:has(input:checked) {
+    background: rgba(255, 255, 255, 0.08);
+    border: 0.5px solid var(--accent);
+}
+
+/* Code wrapper: mobile-optimized */
+.adv-picker .code-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px;
+    padding: 0.1rem 0.3rem;
+}
+
+.adv-picker .value {
+    font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 0.7rem;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0.4rem 0.3rem;
+    flex: 1;
+    outline: none;
+    direction: ltr;
+    min-width: 0;
+}
+
+.adv-picker .copy-color-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 24px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    min-height: 30px;
+    touch-action: manipulation;
+    flex-shrink: 0;
+}
+
+.adv-picker .copy-color-btn:hover {
+    background: var(--accent);
+    color: black;
+}
+
+.adv-picker .copy-color-btn:active {
+    background: var(--accent);
+    color: black;
+}
+
+/* Footer buttons */
+.adv-picker .footer-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.adv-picker .action-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 1rem;
+    border-radius: 32px;
+    font-weight: 500;
+    font-size: 0.72rem;
+    cursor: pointer;
+    color: white;
+    min-height: 36px;
+    touch-action: manipulation;
+    white-space: nowrap;
+}
+
+.adv-picker .action-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.adv-picker .action-btn:active {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.adv-picker .action-btn.confirm {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 600;
+}
+
+.adv-picker .action-btn.confirm:hover {
+    background: #d4b87a;
+}
+
+.adv-picker .action-btn.confirm:active {
+    background: #c4a86a;
+}
+
+/* Toast notification */
+.adv-picker .picker-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #4ade80;
+    padding: 6px 16px;
+    border-radius: 24px;
+    font-size: 0.7rem;
+    z-index: 1000;
+    opacity: 0;
+    transition: 0.2s;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ===== Media Query: 480px and below ===== */
+@media screen and (max-width: 480px) {
+.fabric-showcase {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: default;
+            transition: background-color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            width: 170px; height: 600px; max-height: none; aspect-ratio: auto;
+        }
+    .adv-picker {
+        padding: 0.5rem;
+        gap: 0.45rem;
+        border-radius: 6px;
+    }
+
+    .adv-picker .color-area {
+        aspect-ratio: 3 / 2;
+        min-height: 120px;
+        border-radius: 6px;
+    }
+
+    .adv-picker .active-indicator {
+        width: 16px;
+        height: 16px;
+        border-width: 2px;
+    }
+
+    .adv-picker .hue-slider {
+        height: 18px;
+        border-radius: 18px;
+    }
+
+    .adv-picker .hue-slider::-webkit-slider-thumb {
+        width: 26px;
+        height: 26px;
+        border-width: 2px;
+    }
+
+    .adv-picker .hue-slider::-moz-range-thumb {
+        width: 26px;
+        height: 26px;
+        border-width: 2px;
+    }
+
+    .adv-picker .alpha-row {
+        padding: 0.35rem 0.5rem;
+        gap: 0.35rem;
+        border-radius: 28px;
+    }
+
+    .adv-picker .alpha-row label {
+        font-size: 0.68rem;
+        min-width: 28px;
+    }
+
+    .adv-picker .alpha-slider {
+        height: 10px;
+        flex: 1;
+        min-width: 60px;
+    }
+
+    .adv-picker .alpha-slider::-webkit-slider-thumb {
+        width: 22px;
+        height: 22px;
+    }
+
+    .adv-picker .alpha-slider::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+    }
+
+    .adv-picker .alpha-value {
+        width: 40px;
+        font-size: 0.68rem;
+        padding: 0.2rem 0.25rem;
+    }
+
+    .adv-picker .combined-preview {
+        padding: 0.3rem 0.5rem;
+        gap: 0.35rem;
+        border-radius: 32px;
+    }
+
+    .adv-picker .preview-swatch {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+    }
+
+    .adv-picker .prev-swatch {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+    }
+
+    .adv-picker .prev-group {
+        padding: 0.2rem 0.4rem;
+        gap: 0.25rem;
+    }
+
+    .adv-picker .undo-prev {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.65rem;
+        min-height: 34px;
+        border-radius: 20px;
+    }
+
+    .adv-picker .format-radios {
+        gap: 0.3rem;
+        padding: 0.25rem;
+        border-radius: 28px;
+        justify-content: flex-start;
+    }
+
+    .adv-picker .format-radios label {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+        min-height: 34px;
+        gap: 3px;
+    }
+
+    .adv-picker .format-radios input[type="radio"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .adv-picker .code-wrapper {
+        border-radius: 28px;
+        padding: 0.08rem 0.25rem;
+    }
+
+    .adv-picker .value {
+        font-size: 0.68rem;
+        padding: 0.45rem 0.3rem;
+    }
+
+    .adv-picker .copy-color-btn {
+        padding: 0.35rem 0.55rem;
+        font-size: 0.65rem;
+        min-height: 32px;
+    }
+
+    .adv-picker .footer-buttons {
+        gap: 0.4rem;
+    }
+
+    .adv-picker .action-btn {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.7rem;
+        min-height: 38px;
+        border-radius: 28px;
+    }
+
+    .adv-picker .picker-toast {
+        bottom: 16px;
+        padding: 5px 14px;
+        font-size: 0.68rem;
+        border-radius: 20px;
+    }
+}
+
+/* ===== Extra small screens: 360px and below ===== */
+@media screen and (max-width: 360px) {
+    .adv-picker {
+        padding: 0.4rem;
+        gap: 0.4rem;
+    }
+
+    .adv-picker .color-area {
+        aspect-ratio: 4 / 3;
+        min-height: 100px;
+    }
+
+    .adv-picker .hue-slider {
+        height: 20px;
+    }
+
+    .adv-picker .hue-slider::-webkit-slider-thumb {
+        width: 28px;
+        height: 28px;
+    }
+
+    .adv-picker .hue-slider::-moz-range-thumb {
+        width: 28px;
+        height: 28px;
+    }
+
+    .adv-picker .alpha-row {
+        flex-wrap: wrap;
+        padding: 0.3rem 0.45rem;
+    }
+
+    .adv-picker .combined-preview {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.3rem;
+        border-radius: 20px;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .adv-picker .current-preview {
+        justify-content: center;
+    }
+
+    .adv-picker .prev-group {
+        justify-content: center;
+    }
+
+    .adv-picker .format-radios {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        gap: 0.25rem;
+        padding: 0.2rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .adv-picker .format-radios::-webkit-scrollbar {
+        display: none;
+    }
+
+    .adv-picker .format-radios label {
+        flex-shrink: 0;
+        font-size: 0.62rem;
+        padding: 0.25rem 0.45rem;
+    }
+
+    .adv-picker .footer-buttons {
+        justify-content: stretch;
+    }
+
+    .adv-picker .action-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem 0.5rem;
+        min-height: 40px;
+    }
+}
+
+/* ===== Landscape orientation on mobile ===== */
+@media screen and (max-width: 680px) and (orientation: landscape) {
+    .adv-picker {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        padding: 0.5rem;
+    }
+
+    .adv-picker .color-area {
+        flex: 2;
+        min-width: 180px;
+        aspect-ratio: auto;
+        min-height: 100px;
+        height: auto;
+    }
+
+    .adv-picker .hue-slider {
+        flex: 1;
+        min-width: 100px;
+        height: 100%;
+        writing-mode: vertical-lr;
+        direction: ltr;
+    }
+
+    .adv-picker .alpha-row,
+    .adv-picker .combined-preview,
+    .adv-picker .format-radios,
+    .adv-picker .code-wrapper,
+    .adv-picker .footer-buttons {
+        flex-basis: 100%;
+    }
+}
         @media (max-width: 640px) {
-            .fabric-showcase, .prev-works-carousel { aspect-ratio: 1/1; max-height: 340px; border-radius: 16px; }
+            
             .glass-card { border-radius: 16px; }
             .btn-primary { padding: 10px 18px; font-size: 0.8rem; }
             .modal-content { padding: 16px; border-radius: 16px; max-height: 90vh; }
@@ -540,6 +1159,317 @@
             input[type="color"] { width: 34px; height: 34px; }
             .btn-icon { width: 38px; height: 38px; }
         }
+		
+		
+		 
+/* ==================== أزرار التحكم العائمة ==================== */
+.btn-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--accent);
+}
+   
+/* زر مستشارك AI */
+.chat-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 25px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    border-left: none;
+    border-radius: 0 20px 0 0;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    text-decoration: none;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.chat-toggle-btn:hover {
+    background: var(--glass-highlight);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+    color: var(--accent);
+}
+
+/* زر صمم قماشك */
+.download-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 25px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    border-right: none;
+    border-radius: 20px 0 0 0;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    text-decoration: none;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.download-toggle-btn:hover {
+    background: var(--glass-highlight);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+    color: var(--accent);
+}
+
+@media (max-width: 480px) {
+    .btn-icon {
+        width: 16px;
+        height: 16px;
+    }
+    .download-toggle-btn,
+    .chat-toggle-btn {
+        font-size: 12px !important; 
+        padding: 10px 15px;
+    }
+}
+
+/* ==================== نافذة المحادثة (CHAT WINDOW) ==================== */
+.chat-window {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    width: 360px;
+    height: 500px;
+    background: var(--bg-deep); /* خلفية داكنة كأساس */
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+}
+.chat-window.open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ── رأس المحادثة ── */
+.chat-header {
+    padding: 20px;
+    background: var(--glass-highlight);
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+}
+.chat-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.chat-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    box-shadow: inset 0 0 10px var(--accent-glow);
+}
+.chat-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+.chat-status {
+    font-size: 0.75rem;
+    color: var(--accent);
+}
+.chat-close {
+    color: var(--text-secondary);
+    transition: all 0.3s;
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chat-close:hover { 
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+/* ── منطقة الرسائل ── */
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* خلفية متدرجة زجاجية لمنطقة الرسائل */
+    background: linear-gradient(180deg, transparent, var(--glass-bg));
+}
+
+/* التمرير (Scrollbar) المخصص */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+.message {
+    max-width: 85%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.message.bot { align-self: flex-start; }
+.message.user { align-self: flex-end; }
+
+.message-content {
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* رسالة البوت (AI) */
+.message.bot .message-content {
+    background: var(--glass-highlight);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    border-bottom-right-radius: 4px;
+    backdrop-filter: blur(5px);
+}
+
+/* رسالة المستخدم */
+.message.user .message-content {
+    background: var(--accent);
+    color: var(--bg-deep); /* استخدام لون غامق للنص ليتناسب مع الخلفية الذهبية */
+    border-bottom-left-radius: 4px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin: 0 4px;
+}
+
+/* ── منطقة الإدخال ── */
+.chat-input-area {
+    padding: 16px;
+    background: var(--glass-highlight);
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+}
+.chat-input-area input {
+    flex: 1;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.3s;
+}
+.chat-input-area input::placeholder {
+    color: var(--text-secondary);
+}
+.chat-input-area input:focus { 
+    border-color: var(--accent); 
+    background: var(--glass-highlight);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+.chat-input-area button {
+    width: 44px;
+    height: 44px;
+    background: var(--accent);
+    color: var(--bg-deep);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 10px var(--accent-glow);
+}
+.chat-input-area button:hover { 
+    transform: scale(1.05) translateY(-2px); 
+    box-shadow: 0 6px 15px var(--accent-glow);
+}
+
+/* ── التجاوب مع الشاشات الصغيرة ── */
+@media (max-width: 480px) {
+    .chat-window {
+        bottom: 60px; 
+        left: 15px;
+        width: calc(100% - 30px); 
+        height: 450px;
+    }
+    .chat-header {
+        padding: 12px 15px;
+    }
+    .chat-header-info {
+        gap: 8px;
+    }
+}
+
+ .design-box {
+    width: 200px;
+    height: 550px;
+    max-height: none;
+    aspect-ratio: auto;
+    background-color: #ffffff;
+}
+
+ @media (max-width: 480px) {
+    .design-box {
+        width: 100%;        
+        max-width: 160px;   
+        height: 400px;      
+    }
+}
     </style>
 </head>
 <body class="font-sans antialiased">
@@ -594,80 +1524,115 @@
                 </div>
                 <span class="glass-card-sm px-3 py-1.5 text-xs text-gold font-medium rounded-full">Interactive</span>
             </div>
-            <div class="flex flex-row w-full gap-2 sm:gap-4 items-stretch">
-                <!-- Right Column (60%) -->
-                <div class="w-[60%] glass-card-sm p-3 sm:p-4 flex flex-col gap-4 justify-start" id="mainColorPresets">
-                    <!-- Navigation & Color Title -->
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-text-secondary text-xs sm:text-sm font-medium">اختر اللون:</h3>
-                        <div class="flex items-center gap-2">
-                            <button class="btn-icon w-8 h-8 opacity-80 hover:opacity-100" id="fabPrevBtn" aria-label="السابق" title="التصميم السابق">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                            </button>
-                            <button class="btn-icon w-8 h-8 opacity-80 hover:opacity-100" id="fabNextBtn" aria-label="التالي" title="التصميم التالي">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                            </button>
+            <div class="flex flex-col w-full gap-4">
+                <!-- Top row: Design name (right) | Navigation arrows (left) -->
+                <div class="flex flex-row w-full gap-5 sm:gap-7">
+                    <div class="w-[55%]">
+                        <!-- Design Name & Serial Number -->
+                        <div class="flex items-center justify-between bg-gold/5 border border-gold/20 rounded-xl px-4 py-3 shadow-[0_0_20px_rgba(201,169,110,0.08)]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-1 h-8 bg-gold rounded-full"></div>
+                                <span class="text-cream font-display text-base sm:text-lg font-semibold tracking-wide" id="designNameDisplay">تصميم رقم 1</span>
+                            </div>
+                            <span class="text-gold text-xs font-mono font-bold tracking-widest bg-gold/10 px-3 py-1.5 rounded-lg border border-gold/15" id="designSerialDisplay">#001</span>
                         </div>
                     </div>
-                    
-                    <!-- Color Presets + Custom Picker -->
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <button class="color-preset active w-8 h-8 sm:w-9 sm:h-9" data-color="#ffffff" style="background-color:#ffffff;" title="White"></button>
-                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#1a3a4a" style="background-color:#1a3a4a;" title="Deep Teal"></button>
-                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#2d1a3a" style="background-color:#2d1a3a;" title="Royal Plum"></button>
-                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#3a1a1a" style="background-color:#3a1a1a;" title="Burgundy"></button>
-                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#1a2d1a" style="background-color:#1a2d1a;" title="Forest"></button>
-                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#2d2d1a" style="background-color:#2d2d1a;" title="Olive Gold"></button>
-                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#0f1923" style="background-color:#0f1923;" title="Midnight"></button>
-                        <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#3d2b1a" style="background-color:#3d2b1a;" title="Bronze"></button>
-                        
-                    </div>
-                    
-                    <!-- Advanced Custom Color Picker -->
-                    <div class="color-card rtl mt-2" id="card-rtl" data-default-hue="0" data-default-sat="0" data-default-bright="100">
-                      <div class="color-area"><div class="active-indicator"></div></div>
-                      <input type="range" class="hue-slider" min="0" max="360" />
-                      <div class="flex-row-picker mt-1">
-                        <select class="side-select" id="format-select-rtl">
-                          <option value="hex" selected>HEX</option>
-                          <option value="rgb">RGB</option>
-                          <option value="hsl">HSL</option>
-                        </select>
-                        <code class="value text-gold font-mono text-sm" id="advColorValue">#FFFFFF</code>
-                      </div>
-                      <div class="flex items-center justify-between mt-1">
-                        <div class="flex flex-col">
-                          <span class="text-[10px] text-text-secondary">نسبة التباين</span>
-                          <span class="font-mono text-xs text-white" id="advColorRatio">--</span>
+                    <div class="w-[40%]">
+                        <!-- Navigation Arrows Row -->
+                        <div class="flex items-center justify-center gap-4 h-10">
+                            <button class="btn-icon w-10 h-10 opacity-80 hover:opacity-100" id="fabPrevBtn" aria-label="السابق" title="التصميم السابق">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                            <span class="text-xs text-text-secondary font-mono" id="designCounter">1 / 1</span>
+                            <button class="btn-icon w-10 h-10 opacity-80 hover:opacity-100" id="fabNextBtn" aria-label="التالي" title="التصميم التالي">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
                         </div>
-                        <div class="square letter" id="advColorSquare">ل</div>
-                      </div>
-                    </div>
-                    
-                    <div class="border-t border-white/10 my-1 w-full"></div>
-                    
-                    <!-- Actions (Cart & WhatsApp) -->
-                    <div class="flex items-center justify-end gap-3 mt-auto pt-2">
-                        <button class="btn-icon relative w-10 h-10" id="cartBtn" title="سلة التسوق">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                            </svg>
-                            <span class="cart-badge" id="cartBadge">0</span>
-                        </button>
-                        <a href="https://wa.me/967777967272?text=I'm%20interested%20in%20this%20design" target="_blank" rel="noopener noreferrer" class="btn-icon whatsapp w-10 h-10">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                        </a>
                     </div>
                 </div>
+                
+                <!-- Bottom row: Right content (glass card) | Fabric image -->
+                <div class="flex flex-row w-full gap-5 sm:gap-7 items-stretch">
+                    <div class="w-[55%] glass-card-sm p-3 sm:p-4 flex flex-col gap-4 justify-start" id="mainColorPresets">
+                        <!-- Row 3: Color Title -->
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-text-secondary text-xs sm:text-sm font-medium">اختر اللون:</h3>
+                        </div>
+                        
+                        <!-- Color Presets + Custom Picker -->
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <button class="color-preset active w-8 h-8 sm:w-9 sm:h-9" data-color="#ffffff" style="background-color:#ffffff;" title="White"></button>
+                            <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#1a3a4a" style="background-color:#1a3a4a;" title="Deep Teal"></button>
+                            <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#2d1a3a" style="background-color:#2d1a3a;" title="Royal Plum"></button>
+                            <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#3a1a1a" style="background-color:#3a1a1a;" title="Burgundy"></button>
+                            <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#1a2d1a" style="background-color:#1a2d1a;" title="Forest"></button>
+                            <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#2d2d1a" style="background-color:#2d2d1a;" title="Olive Gold"></button>
+                            <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#0f1923" style="background-color:#0f1923;" title="Midnight"></button>
+                            <button class="color-preset w-8 h-8 sm:w-9 sm:h-9" data-color="#3d2b1a" style="background-color:#3d2b1a;" title="Bronze"></button>
+                            
+                        </div>
+                        
+                        <!-- Advanced Custom Color Picker (from colorpicker.html) -->
+                        <div class="adv-picker" id="adv-picker" data-default-hue="0" data-default-sat="0" data-default-bright="100" data-default-alpha="100">
+                          <div class="color-area">
+                            <div class="active-indicator"></div>
+                          </div>
 
-                <!-- Left Column (40%) -->
-                <div class="w-[40%] flex justify-center items-center shrink-0">
-                    <div class="relative flex items-center justify-center">
-                        <div class="fabric-showcase glass-card" id="fabricShowcase" style="width: 200px; height: 550px; max-height: none; aspect-ratio: auto; background-color: #ffffff;">
-                            <div class="pattern-overlay" id="patternOverlay" style="mix-blend-mode: normal; opacity: 1;">
-                                <img id="fabricImage" src="img/1.png" alt="Fabric Design" style="width: 100%; height: 100%; object-fit: cover;">
+                          <input type="range" class="hue-slider" min="0" max="360" step="1" />
+
+                          
+
+                          <div class="combined-preview">
+                            <div class="current-preview">
+                              <div class="preview-swatch">
+                                <div class="color-fill" id="livePreviewFill"></div>
+                              </div>
+                              <span class="current-label">اللون الحالي</span>
                             </div>
-                            <div class="sheen"></div>
+                            <!-- <div class="prev-group">
+                              <div class="prev-swatch" id="prevSwatch"></div>
+                              <span class="prev-label">السابق</span>
+                              <button class="undo-prev" id="undoPrevBtn">الرجوع</button>
+                            </div> -->
+                          </div>
+
+                           
+
+                          <div class="code-wrapper">
+                            <code class="value" id="advColorValue">#00A7FA</code>
+                            <button class="copy-color-btn" id="copyColorBtn">نسخ</button>
+                          </div>
+
+                          <div class="footer-buttons">
+                            <button class="action-btn confirm" id="confirmColorBtn">تأكيد</button>
+                            <button class="action-btn" id="cancelColorBtn">الغاء</button>
+                          </div>
+                        </div>
+                        <div id="pickerToast" class="picker-toast">تم النسخ</div>
+                        
+                        <div class="border-t border-white/10 my-1 w-full"></div>
+                        
+                        <!-- Actions (Cart & WhatsApp) -->
+                        <div class="flex items-center justify-end gap-3 mt-auto pt-2">
+                            <button class="btn-icon relative w-10 h-10" id="cartBtn" title="سلة التسوق">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                <span class="cart-badge" id="cartBadge">0</span>
+                            </button>
+                            <a href="https://wa.me/967777967272?text=I'm%20interested%20in%20this%20design" target="_blank" rel="noopener noreferrer" class="btn-icon whatsapp w-10 h-10">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="w-[40%] flex justify-center items-center shrink-0">
+                        <div class="relative flex items-center justify-center">
+                            <div class="fabric-showcase glass-card" id="fabricShowcase"  >
+                                <div class="pattern-overlay" id="patternOverlay" style="mix-blend-mode: normal; opacity: 1;">
+                                    <img id="fabricImage" src="img/1.png" alt="Fabric Design" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="sheen"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -732,6 +1697,51 @@
         </div>
         <p class="text-center text-xs text-text-secondary opacity-50 mt-3">© 2025 Fabric FLOWᴬᴵ. جميع الحقوق محفوظة.</p>
     </footer>
+	
+	<!-- ==================== CHAT BOT BUTTON ==================== -->
+<a href="#" id="chatToggleBtn" class="chat-toggle-btn">
+    <!-- استخدمنا أيقونة sparkles لتعبر عن الذكاء الاصطناعي -->
+    <i data-lucide="sparkles" class="btn-icon"></i>
+    <span>مستشارك AI</span>
+</a>
+
+<!-- ==================== DOWNLOAD APP BUTTON ==================== -->
+<a href="#download" class="download-toggle-btn">
+    <span data-i18n="design_fabric">صمم قماشك</span>
+    <!-- استخدمنا أيقونة palette (أو scissors) لتعبر عن التصميم -->
+    <i data-lucide="palette" class="btn-icon"></i>
+</a>
+
+<!-- ── CHAT WINDOW ── -->
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        <div class="chat-header-info">
+            <div class="chat-avatar">
+                <i data-lucide="sparkles" width="20" height="20"></i>
+            </div>
+            <div>
+                <div class="chat-name">مستشارك الذكي للأقمشة</div>
+                <div class="chat-status">متصل الآن</div>
+            </div>
+        </div>
+        <button class="chat-close" id="closeChat">
+            <i data-lucide="x" width="20" height="20"></i>
+        </button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot">
+            <div class="message-content">أهلاً بك في استشارة تصميم الأقمشة! أنا مستشارك الذكي (AI)، كيف يمكنني مساعدتك اليوم في اختيار أو تصميم قماشك المفضل؟</div>
+            <div class="message-time">الآن</div>
+        </div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="اكتب استفسارك عن الأقمشة هنا...">
+        <button id="sendMessage">
+            <i data-lucide="send" width="18" height="18"></i>
+        </button>
+    </div>
+</div>
+	
 
     <!-- ========== TRACKING MODAL ========== -->
     <div class="modal-overlay" id="trackingModal">
@@ -754,8 +1764,8 @@
             <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-white/5">
                 <span class="text-xs text-text-secondary">اختر لونًا:</span>
                 <input type="color" id="trackingStaticColor" value="#c9a96e" style="width:34px; height:34px;">
-                <button class="btn-outline text-xs py-1.5 px-3" id="copyColorBtn">📋 نسخ الكود</button>
-                <button class="btn-outline text-xs py-1.5 px-3" id="addColorToCartBtn">🛒 أضف للسلة</button>
+                <button class="btn-outline text-xs py-1.5 px-3" id="trackingCopyColorBtn">نسخ الكود</button>
+                <button class="btn-outline text-xs py-1.5 px-3" id="addColorToCartBtn">أضف للسلة</button>
             </div>
             <a href="https://wa.me/967777967272" class="btn-outline flex-1 justify-center text-sm">استفسار واتساب</a>
         </div>
@@ -824,12 +1834,30 @@
             let currentFabricIndex = 1;
             let maxFabricIndex = 1;
 
+            // Design info display
+            const designNameDisplay = document.getElementById('designNameDisplay');
+            const designSerialDisplay = document.getElementById('designSerialDisplay');
+            const designCounter = document.getElementById('designCounter');
+
+            function updateFabricDesignInfo() {
+                if (designNameDisplay) {
+                    designNameDisplay.textContent = `تصميم رقم ${currentFabricIndex}`;
+                }
+                if (designSerialDisplay) {
+                    designSerialDisplay.textContent = `#${String(currentFabricIndex).padStart(3, '0')}`;
+                }
+                if (designCounter && maxFabricIndex > 0) {
+                    designCounter.textContent = `${currentFabricIndex} / ${maxFabricIndex}`;
+                }
+            }
+
             function initFabricShowcase() {
                 let i = 1;
                 function checkNext() {
                     const img = new Image();
                     img.onload = () => {
                         maxFabricIndex = i;
+                        updateFabricDesignInfo();
                         i++;
                         checkNext();
                     };
@@ -838,6 +1866,7 @@
                 checkNext();
             }
             initFabricShowcase();
+            updateFabricDesignInfo();
 
             if (fabNextBtn && fabPrevBtn && fabricImage) {
                 fabNextBtn.addEventListener('click', () => {
@@ -846,10 +1875,12 @@
                     img.onload = () => {
                         currentFabricIndex = nextIndex;
                         fabricImage.src = img.src;
+                        updateFabricDesignInfo();
                     };
                     img.onerror = () => {
                         currentFabricIndex = 1;
                         fabricImage.src = `img/1.png`;
+                        updateFabricDesignInfo();
                     };
                     img.src = `img/${nextIndex}.png`;
                 });
@@ -858,6 +1889,7 @@
                     if (currentFabricIndex > 1) {
                         currentFabricIndex--;
                         fabricImage.src = `img/${currentFabricIndex}.png`;
+                        updateFabricDesignInfo();
                     } else {
                         let i = 2;
                         let lastValid = 1;
@@ -871,6 +1903,7 @@
                             img.onerror = () => {
                                 currentFabricIndex = lastValid;
                                 fabricImage.src = `img/${currentFabricIndex}.png`;
+                                updateFabricDesignInfo();
                             };
                             img.src = `img/${i}.png`;
                         }
@@ -881,7 +1914,6 @@
 
             // Fabric showcase & color management
             const fabricShowcase = document.getElementById('fabricShowcase');
-            const customColorPicker = document.getElementById('customColorPicker'); // may be null
             const cartBtn = document.getElementById('cartBtn');
             const cartBadge = document.getElementById('cartBadge');
             const trackingCodeInput = document.getElementById('trackingCode');
@@ -931,99 +1963,177 @@
                     currentShowcaseColor = color;
                     updateShowcaseColor(fabricShowcase, color);
                     updateActivePreset('#mainColorPresets .color-preset[data-color]', color);
-                    customColorPicker.value = color;
                 });
             });
-            // Advanced Color Picker Logic
+            // Advanced Color Picker Logic (from colorpicker.html)
             function hsbToRgb(h, s, b) {
-              h /= 360; s /= 100; b /= 100;
-              const i = Math.floor(h * 6);
-              const f = h * 6 - i;
-              const p = b * (1 - s);
-              const q = b * (1 - f * s);
-              const t = b * (1 - (1 - f) * s);
+              let hueNorm = h / 360;
+              let satNorm = s / 100;
+              let brNorm = b / 100;
+              const i = Math.floor(hueNorm * 6);
+              const f = hueNorm * 6 - i;
+              const p = brNorm * (1 - satNorm);
+              const q = brNorm * (1 - f * satNorm);
+              const t = brNorm * (1 - (1 - f) * satNorm);
               const mod = i % 6;
-              const r = [b, q, p, p, t, b][mod];
-              const g = [t, b, b, q, p, p][mod];
-              const bl = [p, p, t, b, b, q][mod];
+              const r = [brNorm, q, p, p, t, brNorm][mod];
+              const g = [t, brNorm, brNorm, q, p, p][mod];
+              const bl = [p, p, t, brNorm, brNorm, q][mod];
               return [Math.round(r * 255), Math.round(g * 255), Math.round(bl * 255)];
             }
             function rgbToHex(r, g, b) {
               return "#" + [r, g, b].map(v => v.toString(16).padStart(2, "0")).join("").toUpperCase();
             }
-            function luminance(r, g, b) {
-              let a = [r, g, b].map(v => {
-                v /= 255;
-                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-              });
-              return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
-            }
-            function contrast(rgb) {
-              const L = luminance(rgb[0], rgb[1], rgb[2]);
-              return ((L + 0.05) / 0.05).toFixed(2);
-            }
-            function formatFloat(num) {
-              const n = Number(num);
-              return isNaN(n) ? "0.00" : n.toFixed(2);
-            }
 
-            const card = document.getElementById('card-rtl');
-            if (card) {
-                const hueSlider = card.querySelector('.hue-slider');
-                const colorArea = card.querySelector('.color-area');
-                const valueEl = document.getElementById('advColorValue');
-                const ratioEl = document.getElementById('advColorRatio');
-                const letterEl = document.getElementById('advColorSquare');
-                const formatSelect = document.getElementById('format-select-rtl');
-                const indicator = card.querySelector('.active-indicator');
-                
-                let ahue = Number(card.getAttribute('data-default-hue')) || 0;
-                let asat = Number(card.getAttribute('data-default-sat')) || 0;
-                let abright = Number(card.getAttribute('data-default-bright')) || 100;
-                hueSlider.value = (360 - ahue) % 360;
+            const advPicker = document.getElementById('adv-picker');
+            if (advPicker) {
+                const hueSlider = advPicker.querySelector('.hue-slider');
+                const colorArea = advPicker.querySelector('.color-area');
+                const valueSpan = document.getElementById('advColorValue');
+                const indicator = advPicker.querySelector('.active-indicator');
+                const alphaSlider = advPicker.querySelector('.alpha-slider');
+                const alphaNumber = advPicker.querySelector('.alpha-value');
+                const prevSwatch = document.getElementById('prevSwatch');
+                const undoBtn = document.getElementById('undoPrevBtn');
+                const confirmBtn = document.getElementById('confirmColorBtn');
+                const cancelBtn = document.getElementById('cancelColorBtn');
+                const copyColorBtn = document.getElementById('copyColorBtn');
+                const toast = document.getElementById('pickerToast');
+                const livePreviewFill = document.getElementById('livePreviewFill');
 
-                function updateAdvDisplay() {
-                    const displayHue = (360 - hueSlider.value) % 360;
-                    ahue = displayHue;
-                    const [r, g, b] = hsbToRgb(displayHue, asat, abright);
-                    if (ratioEl) ratioEl.textContent = contrast([r, g, b]);
-                    if (letterEl) letterEl.style.background = `rgb(${r},${g},${b})`;
-                    indicator.style.left = `${asat.toFixed(2)}%`;
-                    indicator.style.top = `${(100 - abright).toFixed(2)}%`;
-                    let out;
-                    switch (formatSelect.value) {
-                      case 'rgb': out = `rgb(${r}, ${g}, ${b})`; break;
-                      case 'hsl': out = `hsl(${formatFloat(displayHue)}, ${formatFloat(asat)}%, ${formatFloat(abright)}%)`; break;
-                      default: out = rgbToHex(r, g, b);
-                    }
-                    valueEl.textContent = out;
-                    colorArea.style.background = `linear-gradient(to right, white, hsl(${displayHue}, 100%, 50%)), linear-gradient(to top, black, transparent)`;
-                    
-                    // Apply to showcase
-                    const hexColor = rgbToHex(r, g, b);
-                    currentShowcaseColor = hexColor;
-                    updateShowcaseColor(fabricShowcase, hexColor);
-                    updateActivePreset('#mainColorPresets .color-preset[data-color]', null);
+                const radioHex = advPicker.querySelector('input[value="hex"]');
+                const radioRgb = advPicker.querySelector('input[value="rgb"]');
+                const radioHsl = advPicker.querySelector('input[value="hsl"]');
+
+                let hue = Number(advPicker.getAttribute('data-default-hue')) || 0;
+                let sat = Number(advPicker.getAttribute('data-default-sat')) || 0;
+                let bright = Number(advPicker.getAttribute('data-default-bright')) || 100;
+                let alphaPercent = Number(advPicker.getAttribute('data-default-alpha')) || 100;
+
+                let lastConfirmedColor = { hue, sat, bright, alpha: alphaPercent };
+
+                function setAlphaUI(value) {
+                  alphaPercent = Math.min(100, Math.max(0, value));
+                  alphaSlider.value = alphaPercent;
+                  alphaNumber.value = alphaPercent;
+                }
+
+                function getCurrentRGBA() {
+                  const [r, g, b] = hsbToRgb(hue, sat, bright);
+                  const a = (alphaPercent / 100).toFixed(2);
+                  return `rgba(${r}, ${g}, ${b}, ${a})`;
+                }
+                function getCurrentHSLA() {
+                  const a = (alphaPercent / 100).toFixed(2);
+                  return `hsla(${Math.round(hue)}, ${Math.round(sat)}%, ${Math.round(bright)}%, ${a})`;
+                }
+                function getCurrentHex() {
+                  const [r, g, b] = hsbToRgb(hue, sat, bright);
+                  return rgbToHex(r, g, b);
+                }
+
+                function updateDisplay() {
+                  const [r, g, b] = hsbToRgb(hue, sat, bright);
+                  const rgbaColor = `rgba(${r}, ${g}, ${b}, ${alphaPercent/100})`;
+                  livePreviewFill.style.backgroundColor = rgbaColor;
+
+                  indicator.style.left = sat + '%';
+                  indicator.style.top = (100 - bright) + '%';
+
+                  const hueGrad = `hsl(${hue}, 100%, 50%)`;
+                  colorArea.style.background = `linear-gradient(to right, white, ${hueGrad}), linear-gradient(to top, black, transparent)`;
+
+                  const format = advPicker.querySelector('input[name="colorFormat"]:checked').value;
+                  let displayText = "";
+                  if (format === 'rgb') displayText = getCurrentRGBA();
+                  else if (format === 'hsl') displayText = getCurrentHSLA();
+                  else displayText = getCurrentHex();
+                  valueSpan.textContent = displayText;
+
+                  // Apply to showcase
+                  const hexColor = getCurrentHex();
+                  currentShowcaseColor = hexColor;
+                  updateShowcaseColor(fabricShowcase, hexColor);
+                  updateActivePreset('#mainColorPresets .color-preset[data-color]', null);
                 }
 
                 function updateByPointer(e) {
-                    const rect = colorArea.getBoundingClientRect();
-                    const relX = Math.max(0, Math.min((e.clientX - rect.left) / rect.width, 1));
-                    const relY = Math.max(0, Math.min(1 - (e.clientY - rect.top) / rect.height, 1));
-                    asat = (1 - relX) * 100;
-                    abright = relY * 100;
-                    updateAdvDisplay();
+                  const rect = colorArea.getBoundingClientRect();
+                  let clientX, clientY;
+                  if (e.touches) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                  } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                  }
+                  let relX = (clientX - rect.left) / rect.width;
+                  let relY = (clientY - rect.top) / rect.height;
+                  relX = Math.min(1, Math.max(0, relX));
+                  relY = Math.min(1, Math.max(0, relY));
+                  sat = relX * 100;
+                  bright = (1 - relY) * 100;
+                  updateDisplay();
                 }
 
                 let isDragging = false;
-                colorArea.addEventListener('mousedown', e => { isDragging = true; updateByPointer(e); });
+                colorArea.addEventListener('mousedown', (e) => { e.preventDefault(); updateByPointer(e); isDragging = true; });
+                window.addEventListener('mousemove', (e) => { if(isDragging) { e.preventDefault(); updateByPointer(e); } });
                 window.addEventListener('mouseup', () => { isDragging = false; });
-                window.addEventListener('mousemove', e => { if (isDragging) updateByPointer(e); });
-                formatSelect.addEventListener('input', updateAdvDisplay);
-                hueSlider.addEventListener('input', () => { ahue = (360 - hueSlider.value) % 360; updateAdvDisplay(); });
+                colorArea.addEventListener('touchstart', (e) => { e.preventDefault(); updateByPointer(e); isDragging = true; }, { passive: false });
+                window.addEventListener('touchmove', (e) => { if(isDragging) updateByPointer(e); });
+                window.addEventListener('touchend', () => { isDragging = false; });
 
-                indicator.style.left = `${asat.toFixed(2)}%`;
-                indicator.style.top = `${(100 - abright).toFixed(2)}%`;
+                hueSlider.addEventListener('input', (e) => { hue = parseFloat(e.target.value); updateDisplay(); });
+                alphaSlider.addEventListener('input', (e) => { setAlphaUI(parseInt(e.target.value)); updateDisplay(); });
+                alphaNumber.addEventListener('input', (e) => { setAlphaUI(parseInt(e.target.value)); updateDisplay(); });
+                radioHex.addEventListener('change', () => updateDisplay());
+                radioRgb.addEventListener('change', () => updateDisplay());
+                radioHsl.addEventListener('change', () => updateDisplay());
+
+                function updatePreviousSwatch() {
+                  const [r, g, b] = hsbToRgb(lastConfirmedColor.hue, lastConfirmedColor.sat, lastConfirmedColor.bright);
+                  const alpha = lastConfirmedColor.alpha / 100;
+                  prevSwatch.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                }
+
+                function commitCurrentColor() {
+                  lastConfirmedColor = { hue, sat, bright, alpha: alphaPercent };
+                  updatePreviousSwatch();
+                  showPickerToast('تم التأكيد');
+                }
+
+                function revertToLastConfirmed() {
+                  hue = lastConfirmedColor.hue;
+                  sat = lastConfirmedColor.sat;
+                  bright = lastConfirmedColor.bright;
+                  alphaPercent = lastConfirmedColor.alpha;
+                  hueSlider.value = hue;
+                  setAlphaUI(alphaPercent);
+                  updateDisplay();
+                  showPickerToast('رجوع للسابق');
+                }
+
+                function copyToClipboard(text, msg) {
+                  navigator.clipboard.writeText(text).then(() => showPickerToast(msg)).catch(() => showPickerToast('فشل'));
+                }
+                copyColorBtn.addEventListener('click', () => copyToClipboard(valueSpan.textContent, 'تم نسخ القيمة'));
+
+                function showPickerToast(msg) {
+                  toast.textContent = msg;
+                  toast.style.opacity = '1';
+                  setTimeout(() => toast.style.opacity = '0', 1500);
+                }
+
+                confirmBtn.addEventListener('click', commitCurrentColor);
+                cancelBtn.addEventListener('click', revertToLastConfirmed);
+                undoBtn.addEventListener('click', revertToLastConfirmed);
+
+                hueSlider.value = hue;
+                setAlphaUI(alphaPercent);
+                lastConfirmedColor = { hue, sat, bright, alpha: alphaPercent };
+                updatePreviousSwatch();
+                updateDisplay();
             }
 
             // Cart
@@ -1038,10 +2148,13 @@
             cartBtn.addEventListener('click', () => addToCart('التصميم'));
 
             // Tracking section fixed color picker
-            copyColorBtn.addEventListener('click', () => {
-                const color = trackingStaticColor.value;
-                navigator.clipboard.writeText(color).then(() => showToast('📋 تم نسخ الكود: ' + color));
-            });
+            const trackingCopyColorBtn = document.getElementById('trackingCopyColorBtn');
+            if (trackingCopyColorBtn) {
+                trackingCopyColorBtn.addEventListener('click', () => {
+                    const color = trackingStaticColor.value;
+                    navigator.clipboard.writeText(color).then(() => showToast('تم نسخ الكود: ' + color));
+                });
+            }
             addColorToCartBtn.addEventListener('click', () => {
                 const color = trackingStaticColor.value;
                 addToCart(`لون ${color}`);
@@ -1147,7 +2260,6 @@
 
             // Initial
             updateShowcaseColor(fabricShowcase, currentShowcaseColor);
-            if (customColorPicker) customColorPicker.value = currentShowcaseColor;
             trackingColorPicker.value = currentTrackingColor;
         })();
     </script>
